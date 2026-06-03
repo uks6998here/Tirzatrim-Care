@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TirzatrimCare – Tirzepatide Guide, BMI & Diet Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #0d9488;
+    --teal-light: #14b8a6;
+    --teal-dark: #0f766e;
+    --cream: #fdfaf6;
+    --text: #1a2e2c;
+    --muted: #5f7975;
+    --accent: #f59e0b;
+    --white: #ffffff;
+    --card-bg: #f0faf9;
+    --border: #b2dfdb;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(253,250,246,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--teal-dark);
+    letter-spacing: -0.5px;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    text-decoration: none; color: var(--muted);
+    font-size: 0.9rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--teal); }
+
+  /* HERO */
+  .hero {
+    min-height: 88vh;
+    background: linear-gradient(135deg, #0d9488 0%, #134e4a 60%, #052e16 100%);
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(245,158,11,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(20,184,166,0.2) 0%, transparent 50%);
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 780px; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(245,158,11,0.2);
+    border: 1px solid rgba(245,158,11,0.5);
+    color: #fcd34d;
+    font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0.4rem 1.2rem; border-radius: 50px;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 900; color: #ffffff;
+    line-height: 1.15; margin-bottom: 1.2rem;
+    animation: fadeUp 0.7s ease 0.1s both;
+  }
+  .hero h1 em { color: #6ee7e7; font-style: normal; }
+  .hero p {
+    font-size: 1.1rem; color: rgba(255,255,255,0.8);
+    max-width: 580px; margin: 0 auto 2.5rem;
+    animation: fadeUp 0.7s ease 0.2s both;
+  }
+  .hero-btns {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    animation: fadeUp 0.7s ease 0.3s both;
+  }
+  .btn-primary {
+    background: var(--accent); color: #1a2e2c;
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-weight: 700; font-size: 0.95rem;
+    text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(245,158,11,0.4);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(245,158,11,0.55); }
+  .btn-outline {
+    background: transparent; color: #fff;
+    padding: 0.85rem 2rem; border-radius: 50px;
+    font-weight: 600; font-size: 0.95rem;
+    text-decoration: none; border: 2px solid rgba(255,255,255,0.4);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .btn-outline:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+
+  /* SECTIONS */
+  section { padding: 5rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-tag {
+    display: inline-block; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--teal);
+    margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800; line-height: 1.2;
+    color: var(--text); margin-bottom: 1rem;
+  }
+  .section-subtitle { color: var(--muted); max-width: 560px; font-size: 1.02rem; }
+
+  /* ABOUT TIRZEPATIDE */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: center; margin-top: 3rem;
+  }
+  .about-visual {
+    background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+    border-radius: 24px; padding: 3rem 2.5rem;
+    color: white; position: relative; overflow: hidden;
+  }
+  .about-visual::before {
+    content: '💉';
+    position: absolute; right: -10px; bottom: -10px;
+    font-size: 8rem; opacity: 0.15;
+  }
+  .about-visual h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 1rem; }
+  .about-visual p { opacity: 0.9; font-size: 0.95rem; }
+  .stat-row { display: flex; gap: 1.5rem; margin-top: 1.5rem; }
+  .stat { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 0.9rem 1.2rem; flex: 1; text-align: center; }
+  .stat strong { display: block; font-size: 1.5rem; font-family: 'Playfair Display', serif; }
+  .stat span { font-size: 0.78rem; opacity: 0.8; }
+  .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 0.97rem; }
+  .check-list { list-style: none; margin-top: 1.5rem; }
+  .check-list li { padding: 0.4rem 0; display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.95rem; }
+  .check-list li::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; }
+
+  /* SKU / PRODUCTS */
+  .sku-section { background: linear-gradient(to bottom, #f0fdf9, var(--cream)); }
+  .sku-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.6rem; margin-top: 3rem; }
+  .sku-card {
+    background: white; border-radius: 20px; padding: 2rem 1.5rem;
+    border: 2px solid var(--border); text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .sku-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(13,148,136,0.15); border-color: var(--teal); }
+  .sku-badge {
+    display: inline-block; background: var(--teal); color: white;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; padding: 0.3rem 1rem; border-radius: 50px;
+    margin-bottom: 1.2rem;
+  }
+  .sku-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 900; color: var(--teal-dark); margin-bottom: 0.3rem; }
+  .sku-solution { font-size: 0.88rem; color: var(--muted); margin-bottom: 1.2rem; }
+  .sku-doses { background: var(--card-bg); border-radius: 12px; padding: 0.9rem 1rem; margin-bottom: 1.4rem; }
+  .sku-doses p { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .sku-doses strong { display: block; font-size: 0.95rem; color: var(--text); font-weight: 700; }
+  .sku-icon { font-size: 2.8rem; margin-bottom: 0.8rem; display: block; }
+
+  /* BUY BOX */
+  .buy-box {
+    background: linear-gradient(135deg, #0d9488 0%, #134e4a 100%);
+    border-radius: 28px; padding: 3rem 2.5rem; margin-top: 3.5rem;
+    display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: center;
+    box-shadow: 0 20px 60px rgba(13,148,136,0.3);
+    position: relative; overflow: hidden;
+  }
+  .buy-box::before {
+    content: '💊'; position: absolute; right: 220px; bottom: -20px;
+    font-size: 9rem; opacity: 0.08;
+  }
+  .buy-box-text h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; color: white; margin-bottom: 0.6rem; }
+  .buy-box-text p { color: rgba(255,255,255,0.8); font-size: 0.97rem; max-width: 440px; }
+  .buy-box-text p strong { color: #fcd34d; }
+  .buy-cta { text-align: center; flex-shrink: 0; }
+  .whatsapp-btn {
+    display: inline-flex; align-items: center; gap: 0.7rem;
+    background: #25D366; color: white;
+    padding: 1rem 2rem; border-radius: 50px;
+    font-weight: 700; font-size: 1rem; text-decoration: none;
+    box-shadow: 0 6px 24px rgba(37,211,102,0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+  }
+  .whatsapp-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(37,211,102,0.55); }
+  .buy-note { font-size: 0.78rem; color: rgba(255,255,255,0.6); margin-top: 0.7rem; }
+
+  @media (max-width: 768px) {
+    .sku-grid { grid-template-columns: 1fr; }
+    .buy-box { grid-template-columns: 1fr; text-align: center; }
+    .buy-box-text p { max-width: 100%; margin: 0 auto; }
+  }
+
+  /* BMI CALCULATOR */
+  .bmi-section { background: linear-gradient(to bottom, #f0fdf9, var(--cream)); }
+  .bmi-card {
+    background: white; border-radius: 24px; padding: 3rem;
+    box-shadow: 0 8px 40px rgba(13,148,136,0.1);
+    border: 1px solid var(--border); max-width: 700px; margin: 3rem auto 0;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  label { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+  input, select {
+    padding: 0.85rem 1.1rem; border: 2px solid var(--border);
+    border-radius: 12px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
+    color: var(--text); background: var(--cream);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(13,148,136,0.12); }
+  .calc-btn {
+    width: 100%; padding: 1rem; background: var(--teal);
+    color: white; border: none; border-radius: 12px;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .calc-btn:hover { background: var(--teal-dark); transform: translateY(-1px); }
+  .bmi-result {
+    margin-top: 2rem; padding: 2rem; border-radius: 16px;
+    background: var(--card-bg); border: 1px solid var(--border);
+    display: none;
+  }
+  .bmi-result.show { display: block; animation: fadeUp 0.4s ease; }
+  .bmi-number { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; }
+  .bmi-category { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+  .bmi-bar-wrap { background: #e5e7eb; border-radius: 50px; height: 10px; margin: 1rem 0; overflow: hidden; }
+  .bmi-bar { height: 100%; border-radius: 50px; transition: width 1s ease; }
+  .diet-plan { margin-top: 1.5rem; }
+  .diet-plan h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.8rem; color: var(--teal-dark); }
+  .diet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
+  .diet-item {
+    background: white; border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.8rem; text-align: center;
+    font-size: 0.82rem;
+  }
+  .diet-item .icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+  .diet-item strong { display: block; font-size: 0.78rem; color: var(--teal-dark); }
+
+  /* BLOG */
+  .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem; margin-top: 3rem; }
+  .blog-card {
+    background: white; border-radius: 20px; overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 36px rgba(13,148,136,0.12); }
+  .blog-thumb {
+    height: 160px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem;
+  }
+  .blog-body { padding: 1.4rem; }
+  .blog-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--teal); }
+  .blog-body h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; margin: 0.4rem 0 0.6rem; line-height: 1.35; }
+  .blog-body p { font-size: 0.87rem; color: var(--muted); }
+  .read-more { display: inline-block; margin-top: 0.8rem; font-size: 0.83rem; font-weight: 600; color: var(--teal); text-decoration: none; }
+  .read-more:hover { text-decoration: underline; }
+
+  /* FAQ */
+  .faq-section { background: #f0fdf9; }
+  .faq-list { max-width: 760px; margin: 3rem auto 0; }
+  .faq-item {
+    background: white; border: 1px solid var(--border);
+    border-radius: 14px; margin-bottom: 1rem; overflow: hidden;
+  }
+  .faq-q {
+    padding: 1.2rem 1.5rem; font-weight: 600; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.97rem;
+  }
+  .faq-q:hover { color: var(--teal); }
+  .faq-q .arrow { transition: transform 0.3s; font-size: 0.9rem; color: var(--teal); }
+  .faq-q.open .arrow { transform: rotate(180deg); }
+  .faq-a { padding: 0 1.5rem; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; font-size: 0.92rem; color: var(--muted); }
+  .faq-a.open { max-height: 300px; padding: 0 1.5rem 1.2rem; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    background: #fff8ed; border: 1px solid #fde68a;
+    border-radius: 14px; padding: 1.5rem 2rem; margin-top: 3rem;
+    font-size: 0.85rem; color: #92400e;
+  }
+  .disclaimer strong { color: #78350f; }
+
+  /* FOOTER */
+  footer {
+    background: #0d2b28; color: rgba(255,255,255,0.7);
+    text-align: center; padding: 2.5rem 2rem;
+    font-size: 0.88rem;
+  }
+  footer a { color: var(--teal-light); text-decoration: none; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.2rem; }
+    .nav-links { display: none; }
+    .about-grid, .form-row, .blog-grid, .diet-grid { grid-template-columns: 1fr; }
+    .bmi-card { padding: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Tirzatrim<span>Care</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About Tirzepatide</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#bmi">BMI Calculator</a></li>
+    <li><a href="#blog">Blog</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#bmi" class="btn-primary" style="font-size:0.85rem;padding:0.6rem 1.4rem;">Check My BMI</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">🏥 Trusted Health Information</div>
+    <h1>Your Complete Guide to <em>Tirzepatide</em> & Weight Loss</h1>
+    <p>Understand your BMI, get a personalized diet plan, and learn everything about Tirzepatide (Mounjaro / Tirzatrim) — written by pharmaceutical professionals.</p>
+    <div class="hero-btns">
+      <a href="#bmi" class="btn-primary">📊 Calculate My BMI & Diet Plan</a>
+      <a href="#about" class="btn-outline">Learn About Tirzepatide</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT TIRZEPATIDE -->
+<section id="about">
+  <div class="container">
+    <div class="section-tag">What is it?</div>
+    <h2 class="section-title">Understanding Tirzepatide</h2>
+    <p class="section-subtitle">A breakthrough dual-action medication changing the landscape of weight management and type 2 diabetes treatment.</p>
+    <div class="about-grid">
+      <div class="about-visual">
+        <h3>Clinical Results</h3>
+        <p>In landmark trials, Tirzepatide delivered unprecedented weight loss results compared to other medications.</p>
+        <div class="stat-row">
+          <div class="stat"><strong>22.5%</strong><span>Avg. body weight lost</span></div>
+          <div class="stat"><strong>72%</strong><span>Patients lost 15%+ weight</span></div>
+        </div>
+      </div>
+      <div class="about-text">
+        <p>Tirzepatide is a once-weekly injectable medication that works as a dual GIP and GLP-1 receptor agonist. Unlike older medications, it targets two key hunger and insulin hormones simultaneously.</p>
+        <p>Sold under brand names <strong>Mounjaro</strong> (for diabetes) and <strong>Tirzatrim</strong> (for weight loss), it has received FDA approval and is transforming patient outcomes worldwide.</p>
+        <ul class="check-list">
+          <li>Reduces appetite and food cravings significantly</li>
+          <li>Slows stomach emptying for longer fullness</li>
+          <li>Improves blood sugar control in type 2 diabetes</li>
+          <li>Weekly injection — easy to follow routine</li>
+          <li>Available in multiple doses (2.5mg to 15mg)</li>
+          <li>Works best combined with a healthy diet & exercise</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS / SKU -->
+<section id="products" class="sku-section">
+  <div class="container" style="text-align:center;">
+    <div class="section-tag">Available Products</div>
+    <h2 class="section-title">Tirzatrim Product Range</h2>
+    <p class="section-subtitle" style="margin:0 auto;">Choose the right vial based on your prescribed dose. All products are compounded pharmaceutical-grade solutions.</p>
+
+    <div class="sku-grid">
+      <!-- SKU 1 -->
+      <div class="sku-card">
+        <span class="sku-icon">💉</span>
+        <div class="sku-badge">Starter</div>
+        <div class="sku-name">Tirzatrim 5mg</div>
+        <div class="sku-solution">20mg/mL Solution</div>
+        <div class="sku-doses">
+          <p>Suitable for doses</p>
+          <strong>2.5mg &amp; 5mg</strong>
+        </div>
+        <a href="https://wa.me/923326186998?text=Hi%2C%20I%20want%20to%20order%20Tirzatrim%205mg%20(20mg%20solution)" class="whatsapp-btn" style="font-size:0.85rem;padding:0.7rem 1.4rem;">
+          🛒 Order Now
+        </a>
+      </div>
+
+      <!-- SKU 2 -->
+      <div class="sku-card" style="border-color:var(--accent);box-shadow:0 8px 32px rgba(245,158,11,0.15);">
+        <span class="sku-icon">💉</span>
+        <div class="sku-badge" style="background:var(--accent);color:#1a2e2c;">Most Popular</div>
+        <div class="sku-name">Tirzatrim 10mg</div>
+        <div class="sku-solution">40mg/mL Solution</div>
+        <div class="sku-doses">
+          <p>Suitable for doses</p>
+          <strong>5mg, 7.5mg &amp; 10mg</strong>
+        </div>
+        <a href="https://wa.me/923326186998?text=Hi%2C%20I%20want%20to%20order%20Tirzatrim%2010mg%20(40mg%20solution)" class="whatsapp-btn" style="font-size:0.85rem;padding:0.7rem 1.4rem;">
+          🛒 Order Now
+        </a>
+      </div>
+
+      <!-- SKU 3 -->
+      <div class="sku-card">
+        <span class="sku-icon">💉</span>
+        <div class="sku-badge">Max Dose</div>
+        <div class="sku-name">Tirzatrim 15mg</div>
+        <div class="sku-solution">60mg/mL Solution</div>
+        <div class="sku-doses">
+          <p>Suitable for doses</p>
+          <strong>12.5mg &amp; 15mg</strong>
+        </div>
+        <a href="https://wa.me/923326186998?text=Hi%2C%20I%20want%20to%20order%20Tirzatrim%2015mg%20(60mg%20solution)" class="whatsapp-btn" style="font-size:0.85rem;padding:0.7rem 1.4rem;">
+          🛒 Order Now
+        </a>
+      </div>
+    </div>
+
+    <!-- BUY BOX -->
+    <div class="buy-box">
+      <div class="buy-box-text">
+        <h3>📦 Ready to Order Tirzatrim?</h3>
+        <p>Contact us directly on WhatsApp to place your order, ask about availability, pricing, or get guidance on which product is right for your prescribed dose.</p>
+        <p style="margin-top:0.8rem;">📞 <strong>+92 332 6186998</strong> — We typically respond within minutes.</p>
+      </div>
+      <div class="buy-cta">
+        <a href="https://wa.me/923326186998?text=Hi%2C%20I%20would%20like%20to%20order%20Tirzatrim.%20Can%20you%20help%20me%3F" class="whatsapp-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.852L0 24l6.335-1.652A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.36-.214-3.728.972.998-3.629-.235-.374A9.818 9.818 0 1112 21.818z"/></svg>
+          Chat on WhatsApp
+        </a>
+        <div class="buy-note">No account needed · Fast reply</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BMI CALCULATOR -->
+<section id="bmi" class="bmi-section">
+  <div class="container" style="text-align:center;">
+    <div class="section-tag">Free Tool</div>
+    <h2 class="section-title">BMI Calculator & Personalized Diet Plan</h2>
+    <p class="section-subtitle" style="margin:0 auto;">Enter your details below to get your BMI, weight category, and a tailored diet plan to support your Tirzepatide journey.</p>
+    <div class="bmi-card">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="age">Age (years)</label>
+          <input type="number" id="age" placeholder="e.g. 35" min="18" max="100">
+        </div>
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select id="gender">
+            <option value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="height">Height (cm)</label>
+          <input type="number" id="height" placeholder="e.g. 170" min="100" max="250">
+        </div>
+        <div class="form-group">
+          <label for="weight">Weight (kg)</label>
+          <input type="number" id="weight" placeholder="e.g. 85" min="30" max="300">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:1.5rem;">
+        <label for="activity">Activity Level</label>
+        <select id="activity">
+          <option value="sedentary">Sedentary (little or no exercise)</option>
+          <option value="light">Lightly active (1-3 days/week)</option>
+          <option value="moderate">Moderately active (3-5 days/week)</option>
+          <option value="active">Very active (6-7 days/week)</option>
+        </select>
+      </div>
+      <button class="calc-btn" onclick="calculateBMI()">Calculate My BMI & Diet Plan 📊</button>
+
+      <div class="bmi-result" id="result">
+        <div style="display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;">
+          <div class="bmi-number" id="bmi-val">—</div>
+          <div>
+            <div class="bmi-category" id="bmi-cat">—</div>
+            <div style="font-size:0.85rem;color:var(--muted)" id="bmi-desc">—</div>
+          </div>
+        </div>
+        <div class="bmi-bar-wrap"><div class="bmi-bar" id="bmi-bar"></div></div>
+        <p id="calorie-info" style="font-size:0.9rem;color:var(--muted);margin-bottom:0.5rem;"></p>
+        <div class="diet-plan">
+          <h4>🥗 Your Personalized Diet Plan</h4>
+          <div class="diet-grid" id="diet-grid"></div>
+        </div>
+        <div class="disclaimer" style="margin-top:1.5rem;font-size:0.8rem;">
+          ⚠️ <strong>Disclaimer:</strong> This is for informational purposes only. Always consult your doctor or pharmacist before starting Tirzepatide or changing your diet.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog">
+  <div class="container">
+    <div class="section-tag">Knowledge Base</div>
+    <h2 class="section-title">Latest Articles</h2>
+    <p class="section-subtitle">Evidence-based guides for patients on Tirzepatide and their families.</p>
+    <div class="blog-grid">
+      <div class="blog-card">
+        <div class="blog-thumb" style="background:#f0fdf4;">💉</div>
+        <div class="blog-body">
+          <div class="blog-tag">Getting Started</div>
+          <h3>What to Expect in Your First Week on Tirzepatide</h3>
+          <p>From the first injection to managing side effects — a complete first-week guide for new patients.</p>
+          <a href="#" class="read-more">Read article →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb" style="background:#fef9f0;">🥦</div>
+        <div class="blog-body">
+          <div class="blog-tag">Nutrition</div>
+          <h3>Best Foods to Eat While on Tirzepatide</h3>
+          <p>Maximize your results with the right foods. Learn what to eat — and what to avoid — on this medication.</p>
+          <a href="#" class="read-more">Read article →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb" style="background:#fdf2f8;">⚖️</div>
+        <div class="blog-body">
+          <div class="blog-tag">Weight Loss</div>
+          <h3>Tirzepatide vs Semaglutide: Which Is Better?</h3>
+          <p>A detailed, evidence-based comparison of the two leading GLP-1 medications for weight loss.</p>
+          <a href="#" class="read-more">Read article →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb" style="background:#f0f4ff;">🩺</div>
+        <div class="blog-body">
+          <div class="blog-tag">Side Effects</div>
+          <h3>Managing Nausea & Common Side Effects</h3>
+          <p>Practical tips from pharmaceutical professionals on handling the most common Tirzepatide side effects.</p>
+          <a href="#" class="read-more">Read article →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb" style="background:#f0fbff;">🏃</div>
+        <div class="blog-body">
+          <div class="blog-tag">Lifestyle</div>
+          <h3>Exercise Guidelines for Tirzepatide Patients</h3>
+          <p>How to safely combine physical activity with your weekly injections for maximum results.</p>
+          <a href="#" class="read-more">Read article →</a>
+        </div>
+      </div>
+      <div class="blog-card">
+        <div class="blog-thumb" style="background:#fff0f0;">❓</div>
+        <div class="blog-body">
+          <div class="blog-tag">Patient Guide</div>
+          <h3>Who Qualifies for Tirzepatide Treatment?</h3>
+          <p>BMI thresholds, health conditions, and doctor criteria — find out if you're a candidate.</p>
+          <a href="#" class="read-more">Read article →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="faq-section">
+  <div class="container" style="text-align:center;">
+    <div class="section-tag">Common Questions</div>
+    <h2 class="section-title">Frequently Asked Questions</h2>
+    <p class="section-subtitle" style="margin:0 auto;">Answers to the questions patients ask most about Tirzepatide.</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How long does it take for Tirzepatide to work? <span class="arrow">▼</span></div>
+        <div class="faq-a">Most patients notice appetite reduction within the first 1–2 weeks. Significant weight loss (5–10%) typically becomes visible by weeks 8–12. Maximum results are usually seen around 72 weeks at the highest dose.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What BMI do I need to qualify for Tirzepatide? <span class="arrow">▼</span></div>
+        <div class="faq-a">For weight loss (Tirzatrim), you generally need a BMI of 30+ (obese), or 27+ (overweight) with at least one weight-related condition such as high blood pressure, type 2 diabetes, or high cholesterol. Your doctor makes the final decision.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What are the most common side effects? <span class="arrow">▼</span></div>
+        <div class="faq-a">The most common side effects are gastrointestinal: nausea, diarrhea, vomiting, and constipation. These are usually worst when starting or increasing the dose and tend to improve over time. Eating smaller, low-fat meals helps manage them.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I eat normally while on Tirzepatide? <span class="arrow">▼</span></div>
+        <div class="faq-a">Tirzepatide works best with a reduced-calorie, balanced diet. Because the medication slows digestion, large fatty meals may worsen nausea. Focus on lean proteins, vegetables, whole grains, and small frequent meals for best results.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is Tirzepatide available in Pakistan? <span class="arrow">▼</span></div>
+        <div class="faq-a">Tirzepatide availability varies. As of 2025, it is primarily available in the US, EU, and select other markets. In Pakistan, some specialty clinics and pharmaceutical distributors may carry it. Consult your local physician or pharmacist for current availability.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Will I regain weight if I stop taking it? <span class="arrow">▼</span></div>
+        <div class="faq-a">Studies show that stopping Tirzepatide can lead to weight regain, similar to other GLP-1 medications. This is why it's considered a long-term treatment. Lifestyle changes — diet and exercise — are crucial to maintain results if you discontinue.</div>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <strong>⚠️ Medical Disclaimer:</strong> The content on TirzatrimCare is for informational and educational purposes only. It does not constitute medical advice. Always consult a qualified healthcare professional before starting, stopping, or changing any medication or diet plan. Tirzepatide is a prescription-only medication.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:white;margin-bottom:0.5rem;">TirzatrimCare</div>
+  <p>Your trusted resource for Tirzepatide, BMI tracking, and evidence-based weight loss guidance.</p>
+  <p style="margin-top:1rem;font-size:0.8rem;">© 2025 TirzatrimCare. For informational purposes only. Not a substitute for medical advice. | <a href="#">Privacy Policy</a> | <a href="#">Contact</a></p>
+</footer>
+
+<script>
+function calculateBMI() {
+  const height = parseFloat(document.getElementById('height').value);
+  const weight = parseFloat(document.getElementById('weight').value);
+  const age = parseFloat(document.getElementById('age').value);
+  const gender = document.getElementById('gender').value;
+  const activity = document.getElementById('activity').value;
+
+  if (!height || !weight || height < 100 || weight < 30) {
+    alert('Please enter valid height and weight values.');
+    return;
+  }
+
+  const bmi = weight / ((height / 100) ** 2);
+  const bmiRounded = bmi.toFixed(1);
+
+  let category, color, barColor, desc, barWidth;
+  if (bmi < 18.5) {
+    category = 'Underweight'; color = '#3b82f6'; barColor = '#3b82f6'; desc = 'You are below a healthy weight range.'; barWidth = Math.max(5, (bmi / 40) * 100) + '%';
+  } else if (bmi < 25) {
+    category = 'Healthy Weight ✅'; color = '#16a34a'; barColor = '#22c55e'; desc = 'You are in the ideal weight range. Great job!'; barWidth = (bmi / 40) * 100 + '%';
+  } else if (bmi < 30) {
+    category = 'Overweight'; color = '#f59e0b'; barColor = '#f59e0b'; desc = 'You may benefit from weight management strategies.'; barWidth = (bmi / 40) * 100 + '%';
+  } else if (bmi < 35) {
+    category = 'Obese (Class I)'; color = '#ef4444'; barColor = '#ef4444'; desc = 'You may qualify for Tirzepatide. Consult your doctor.'; barWidth = (bmi / 40) * 100 + '%';
+  } else {
+    category = 'Obese (Class II/III)'; color = '#b91c1c'; barColor = '#b91c1c'; desc = 'You may be a strong candidate for Tirzepatide therapy.'; barWidth = '98%';
+  }
+
+  // Calories (Mifflin-St Jeor)
+  let bmr = 10 * weight + 6.25 * height - 5 * (age || 35);
+  if (gender === 'female') bmr -= 161; else bmr += 5;
+  const activityMultipliers = { sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725 };
+  const tdee = Math.round(bmr * (activityMultipliers[activity] || 1.2));
+  const targetCalories = Math.max(1200, tdee - 500);
+
+  document.getElementById('bmi-val').textContent = bmiRounded;
+  document.getElementById('bmi-val').style.color = color;
+  document.getElementById('bmi-cat').textContent = category;
+  document.getElementById('bmi-cat').style.color = color;
+  document.getElementById('bmi-desc').textContent = desc;
+  document.getElementById('bmi-bar').style.width = barWidth;
+  document.getElementById('bmi-bar').style.background = barColor;
+  document.getElementById('calorie-info').innerHTML = `🔥 Your estimated daily calorie needs: <strong>${tdee} kcal/day</strong> &nbsp;|&nbsp; 🎯 Recommended intake for weight loss: <strong>${targetCalories} kcal/day</strong>`;
+
+  // Diet plan
+  let meals = [];
+  if (bmi < 18.5) {
+    meals = [
+      {icon:'🥚', title:'Breakfast', desc:'3 eggs + whole grain toast + banana + full-fat yogurt'},
+      {icon:'🥩', title:'Lunch', desc:'Chicken rice bowl with olive oil, avocado, veggies'},
+      {icon:'🥜', title:'Snack', desc:'Peanut butter + apple + a handful of nuts'},
+      {icon:'🍗', title:'Dinner', desc:'Salmon/beef + sweet potato + cooked vegetables'},
+      {icon:'🥛', title:'Before Bed', desc:'Warm full-fat milk + handful of almonds'},
+      {icon:'💧', title:'Hydration', desc:'8–10 glasses of water daily'},
+    ];
+  } else if (bmi < 25) {
+    meals = [
+      {icon:'🥣', title:'Breakfast', desc:'Oats with berries + 2 boiled eggs + green tea'},
+      {icon:'🥗', title:'Lunch', desc:'Grilled chicken salad with olive oil dressing + lentils'},
+      {icon:'🍎', title:'Snack', desc:'Apple + a small handful of walnuts or almonds'},
+      {icon:'🐟', title:'Dinner', desc:'Grilled fish or chicken + steamed veggies + brown rice'},
+      {icon:'🥤', title:'Evening', desc:'Protein smoothie or low-fat yogurt'},
+      {icon:'💧', title:'Hydration', desc:'8–10 glasses of water daily'},
+    ];
+  } else {
+    meals = [
+      {icon:'🥣', title:'Breakfast', desc:'High-protein eggs (2) + veggies + green tea, no sugar'},
+      {icon:'🥗', title:'Lunch', desc:'Grilled chicken/fish + large salad, no fried foods'},
+      {icon:'🥒', title:'Snack', desc:'Cucumber + hummus or celery sticks — low calorie'},
+      {icon:'🍲', title:'Dinner', desc:'Lean protein (fish/chicken) + steamed vegetables only'},
+      {icon:'⛔', title:'Avoid', desc:'Sugary drinks, white bread, fried foods, processed snacks'},
+      {icon:'💧', title:'Hydration', desc:'10–12 glasses of water, especially before meals'},
+    ];
+  }
+
+  const grid = document.getElementById('diet-grid');
+  grid.innerHTML = meals.map(m => `
+    <div class="diet-item">
+      <div class="icon">${m.icon}</div>
+      <strong>${m.title}</strong>
+      <p>${m.desc}</p>
+    </div>
+  `).join('');
+
+  const result = document.getElementById('result');
+  result.classList.add('show');
+  result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function toggleFaq(el) {
+  const answer = el.nextElementSibling;
+  const isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-q').forEach(q => q.classList.remove('open'));
+  if (!isOpen) { answer.classList.add('open'); el.classList.add('open'); }
+}
+</script>
+</body>
+</html>
